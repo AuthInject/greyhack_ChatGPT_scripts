@@ -1,0 +1,41 @@
+// Command: nmap
+if params.len != 1 or params[0] == "-h" or params[0] == "--help" then exit(command_info("nmap_usage"))
+
+ipAddress = params[0]
+
+if not is_valid_ip(ipAddress) then exit("nmap: invalid IP address")
+
+if not get_shell.host_computer.is_network_active then exit("nmap: no internet access")
+
+isLanIp = is_lan_ip(ipAddress)
+
+if isLanIp then
+   router = get_router
+else 
+   router = get_router(ipAddress)
+end if
+
+if router == null then exit("nmap: IP address not found")
+
+ports = null
+
+if not isLanIp then
+   ports = router.used_ports
+else
+   ports = router.device_ports(ipAddress)
+end if
+
+if ports == null then exit("nmap: no open ports")
+
+if typeof(ports) == "string" then exit(ports)
+
+print("Scanning IP address: " + ipAddress + "\n")
+
+for port in ports
+   if not port.is_closed then
+      service_info = router.port_info(port)
+      print("Port " + port.port_number + " is open, running " + service_info)
+   end if
+end for
+
+print("\nScan completed")
