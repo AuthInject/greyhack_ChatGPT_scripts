@@ -1,0 +1,19 @@
+// Command: scanlib_addresses
+if params.len != 1 or params[0] == "-h" or params[0] == "--help" then exit(command_info("scanlib_addresses_usage"))
+
+metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then exit("Error: Missing metaxploit library")
+
+libFile = get_shell.host_computer.File(params[0])
+if not libFile then exit("Can't find library: " + params[0])
+
+print("Scanning memory addresses...")
+metaLib = metaxploit.load(libFile.path)
+listMem = metaxploit.scan(metaLib)
+
+if listMem.len == 0 then exit("No issues detected.")
+
+print("Memory addresses for " + params[0] + ":")
+for itemMem in listMem
+    print(itemMem)
+end for
