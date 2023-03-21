@@ -1,0 +1,26 @@
+//command: calc
+if params.len != 3 or params[0] == "-h" or params[0] == "--help" then
+    print(command_info("calc_usage"))
+else
+    num1 = to_int(params[1])
+    num2 = to_int(params[2])
+    operator = params[0]
+    result = null
+    
+    // Perform the calculation based on the operator
+    if operator == "+" then
+        result = num1 + num2
+    else if operator == "-" then
+        result = num1 - num2
+    else if operator == "*" then
+        result = num1 * num2
+    else if operator == "/" then
+        result = num1 / num2
+    else
+        print("Error: Invalid operator: " + operator)
+        exit(command_info("calc_usage"))
+    end if
+    
+    // Output the result
+    print("Result: " + result)
+end if
