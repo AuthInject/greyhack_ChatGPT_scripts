@@ -1,0 +1,11 @@
+//command: ifconfig
+if params.len != 0 and (params.len != 4 or params[0] == "-h" or params[0] == "--help") then exit(command_info("ifconfig_usage"))
+
+computer = get_shell.host_computer
+if computer.is_network_active then
+    lip = computer.local_ip
+    gw = computer.network_gateway
+    print("\nLAN Address: " + lip + "\nRouter Address: " + gw + "\n")
+else
+    print("Not connected to the network.")
+end if
