@@ -1,0 +1,34 @@
+// command: ls
+if params.len > 2 then
+    print(command_info("ls_usage"))
+else
+    computer = get_shell.host_computer
+    folderPath = current_path
+    if params.len == 2 then
+        folderPath = params[1]
+    end if
+
+    folder = computer.File(folderPath)
+    if folder == null then
+        print("ls: No such file or directory")
+    else
+        if not folder.has_permission("r") then
+            print("ls: permission denied")
+        else
+            subFiles = folder.get_folders + folder.get_files
+            output = ""
+            for subFile in subFiles
+                nameFile = subFile.name
+                size = subFile.size
+
+                if output.len > 0 then 
+                    output = output + "\n"
+                end if
+
+                output = output + nameFile + "\t" + size
+            end for
+            
+            print(format_columns(output))
+        end if
+    end if
+end if
