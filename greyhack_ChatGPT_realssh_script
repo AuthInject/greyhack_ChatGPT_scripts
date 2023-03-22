@@ -1,0 +1,22 @@
+//Command: ssh
+if params.len < 1 or params.len > 2 then exit(command_info("ssh_usage"))
+
+credentials = params[0].split("@")
+user = credentials[0]
+ip = credentials[1]
+
+port = 22
+if params.len == 2 then port = params[1].to_int
+if typeof(port) != "number" then exit("Invalid port: " + port)
+
+password = user_input("Enter password: ")
+
+print("Connecting...")
+
+shell = get_shell.connect_service(ip, port, user, password, "ssh")
+if typeof(shell) == "string" then exit(shell)
+if shell then
+shell.start_terminal
+else
+print("Connection failed")
+end if
